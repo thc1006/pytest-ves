@@ -23,8 +23,10 @@ confirmed decisions; the original draft is kept for historical reference.
 3. **Validator:** `jsonschema>=4.25,<5` for baseline; optional
    `jsonschema-rs>=0.46,<1` via `pip install pytest-ves[fast]` for 10-100x
    speedup on the 105 KB / 3091-line schema. Draft-04.
-4. **Factories:** `polyfactory>=3.3,<4` (v3.1.0 added TypedDict NotRequired
-   support; v3.3.0 released 2026-02-22). Wrapped so consumers don't touch it.
+4. **Factories:** **not a runtime dependency** in v0.1.0. polyfactory (>=3.3,<4)
+   is offered as an opt-in extra `pytest-ves[factories]` for users who want
+   random/fuzz data generation on top of the plain-dict builders. Most test
+   code only needs deterministic builders.
 5. **VES versions:** single schema → accept 7.0/7.0.1/7.1/7.1.1/7.2/7.2.1.
    Builders emit 7.2.1 defaults (`vesEventListenerVersion: "7.2.1"`,
    `version: "4.1"`). No separate 7.1.1 compat shim needed.
@@ -46,7 +48,7 @@ confirmed decisions; the original draft is kept for historical reference.
 
 | Original | Corrected | Reason |
 |---|---|---|
-| `polyfactory>=2.15,<3` | `>=3.3,<4` | 3.x series released; v2 EOL |
+| `polyfactory>=2.15,<3` runtime dep | moved to `[factories]` extra | core builders are stdlib-only |
 | Python >=3.11 | Python >=3.10 | pytest 9 floor is 3.10; wider reach |
 | pytest unspecified | `pytest>=8.0,<10` | covers current major and one behind |
 | No perf alternative | `[fast]` extra with jsonschema-rs | pure Python ~5s on this schema |

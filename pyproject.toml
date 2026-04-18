@@ -28,13 +28,15 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "polyfactory>=3.3,<4",
     "jsonschema>=4.25,<5",
 ]
 
 [project.optional-dependencies]
 # Rust-backed validator, 10-100x faster on the 3091-line ONAP schema.
 fast = ["jsonschema-rs>=0.46,<1"]
+# Random-data factories for property-based testing. Opt-in; not imported by
+# the core plugin.
+factories = ["polyfactory>=3.3,<4"]
 
 [project.urls]
 Homepage = "https://github.com/thc1006/pytest-ves"
@@ -67,6 +69,12 @@ markers = [
     "integration: runs against real Docker containers (opt-in)",
 ]
 addopts = "-ra --strict-markers"
+# Note on coverage: because pytest_ves IS a pytest plugin registered via
+# pytest11 entry points, pytest-cov activates AFTER pytest has already
+# imported our package. That produces "module-not-measured" warnings and
+# under-reports coverage. Run coverage under pytest via:
+#   uv run coverage run -m pytest && uv run coverage report -m
+# See CONTRIBUTING.md for the canonical invocation.
 
 [tool.ruff]
 line-length = 100
@@ -82,9 +90,23 @@ strict = true
 files = ["src"]
 
 [tool.coverage.run]
-source = ["pytest_ves"]
+source_pkgs = ["pytest_ves"]
 branch = true
+# Handle editable install: map the installed site-packages copy back to src/.
+relative_files = true
+
+[tool.coverage.paths]
+source = [
+    "src/",
+    "*/site-packages/",
+]
 
 [tool.coverage.report]
 show_missing = true
 skip_covered = false
+exclude_also = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]

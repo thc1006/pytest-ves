@@ -17,6 +17,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          python-version: "3.12"
       - run: uv sync --all-extras
       - run: uv run ruff check .
       - run: uv run mypy src
@@ -34,7 +35,11 @@ jobs:
           enable-cache: true
           python-version: ${{ matrix.python-version }}
       - run: uv sync --all-extras
-      - run: uv run pytest --cov=pytest_ves --cov-report=xml
+      # Use `coverage run` so coverage instruments BEFORE pytest loads the
+      # pytest_ves plugin via pytest11 entry point (see pyproject comment).
+      - run: uv run coverage run -m pytest
+      - run: uv run coverage report -m --fail-under=90
+      - run: uv run coverage xml
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         if: matrix.python-version == '3.12'

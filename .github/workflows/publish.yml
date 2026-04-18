@@ -9,7 +9,13 @@ permissions:
   id-token: write  # OIDC for PyPI trusted publishing
 
 jobs:
+  # Gate on the full CI matrix before we ever push to PyPI. A bad tag must
+  # not auto-publish. If CI is red, fix the code and re-tag.
+  gate:
+    uses: ./.github/workflows/ci.yml
+
   publish:
+    needs: [gate]
     runs-on: ubuntu-latest
     environment:
       name: pypi

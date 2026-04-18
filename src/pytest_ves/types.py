@@ -70,7 +70,7 @@ class FaultFields(TypedDict, total=False):
     specificProblem: str
     vfStatus: Literal[
         "Active", "Idle", "Preparing to terminate", "Ready to terminate",
-        "Requesting Termination",
+        "Requesting termination",
     ]
 
     # Optional

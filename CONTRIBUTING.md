@@ -9,9 +9,18 @@ changes.
 ```bash
 # install uv if needed: https://docs.astral.sh/uv/
 uv sync --all-extras
+
+# Fast inner loop (no coverage):
 uv run pytest
 uv run ruff check .
 uv run mypy src
+
+# With coverage (use `coverage run -m pytest`, NOT `pytest --cov=...`, because
+# pytest_ves itself is a pytest plugin; pytest-cov otherwise activates too
+# late and misses our import-time code).
+uv run coverage run -m pytest
+uv run coverage report -m
+uv run coverage html   # open htmlcov/index.html
 ```
 
 ## Running integration tests

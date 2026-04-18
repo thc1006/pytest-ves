@@ -75,8 +75,13 @@ See `docs/adr/` for design rationale. See `CHANGELOG.md` for release history.
 
 ## Related projects
 
-- [`o-ran-smo-ves-dashboards`](../o-ran-smo-ves-dashboards/) — sister project; Grafana dashboard pack for VES stored in InfluxDB via `nonrtric-plt-influxlogger`. Uses pytest-ves as its test-data seeder.
-- `o-ran-sc/smo-ves` — upstream reference stack (VES Collector + Grafana + InfluxDB) used in our E2E tests.
+- **`o-ran-smo-ves-dashboards`** (sister project, TBD) — Grafana dashboard
+  pack for VES events stored in InfluxDB via `nonrtric-plt-influxlogger`.
+  Uses `pytest-ves` as its test-data seeder.
+- [`o-ran-sc/smo-ves`](https://github.com/o-ran-sc/smo-ves) — upstream
+  reference stack (VES Collector + Grafana + InfluxDB) used in our
+  integration tests.
+- [`onap/integration-simulators-nf-simulator-ves-client`](https://github.com/onap/integration-simulators-nf-simulator-ves-client) — upstream Java/Docker simulator; complementary tool, different use case.
 
 ## License
 

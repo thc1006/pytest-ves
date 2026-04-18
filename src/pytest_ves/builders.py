@@ -7,9 +7,10 @@ The builders produce plain ``dict`` payloads that:
 - follow VES 7.2.1 defaults (``vesEventListenerVersion: "7.2.1"``).
 
 Every required field has a documented default; callers override via keyword
-arguments on the ``build`` helpers (or the underlying dataclass fields). No
-runtime dependency on pydantic, msgspec, or polyfactory in this module —
-polyfactory is only used in ``factories.py`` for random-data use cases.
+arguments on the ``build`` helpers (or the underlying dataclass fields). The
+core builders depend only on the Python standard library — no pydantic,
+msgspec, or polyfactory at runtime. For random/fuzz data generation, install
+``pytest-ves[factories]`` and use the optional polyfactory integration.
 """
 from __future__ import annotations
 

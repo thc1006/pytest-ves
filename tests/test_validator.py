@@ -190,8 +190,10 @@ def test_rs_factory_probes_api_shape(monkeypatch):
     validate_ves(_minimal_valid_event())
 
     # Sad path: RuntimeError wrapped as SchemaValidationError.
+    # Use a payload that passes the preflight envelope check (so control
+    # reaches the rs validator) but fails the rs fake's own gate.
     with pytest.raises(SchemaValidationError):
-        validate_ves({})
+        validate_ves({"eventList": ["not-an-event-object"]})
 
 
 def test_rs_factory_falls_back_to_JSONSchema_class(monkeypatch):  # noqa: N802

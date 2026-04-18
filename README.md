@@ -62,6 +62,8 @@ Single vendored schema (`CommonEventFormat_30.2.1_ONAP.json`) covers
 
 ## Fixture catalogue
 
+### Shipped
+
 | Fixture | Domain | Since |
 |---|---|---|
 | `ves_fault_event` | fault | 0.1.0 |
@@ -73,11 +75,20 @@ Single vendored schema (`CommonEventFormat_30.2.1_ONAP.json`) covers
 | `ves_syslog_event` | syslog | 0.2.0 |
 | `ves_state_change_event` | stateChange | 0.2.0 |
 | `ves_other_event` | other | 0.2.0 |
-| `ves_threshold_crossing_alert_event` | thresholdCrossingAlert | v0.3.0 |
-| `ves_mobile_flow_event` | mobileFlow | v0.3.0 |
-| `ves_sip_signaling_event` | sipSignaling | v0.3.0 |
-| `ves_voice_quality_event` | voiceQuality | v0.3.0 |
-| `ves_perf_3gpp_event` | perf3gpp | v0.3.0 |
+
+### Roadmap (NOT shipped, DO NOT import)
+
+Planned for v0.3.0 once their nested sub-object / array-of-object shapes
+are modelled carefully. Attempting to use these right now will raise
+``fixture '<name>' not found``.
+
+| Fixture | Domain | Complexity |
+|---|---|---|
+| `ves_threshold_crossing_alert_event` | thresholdCrossingAlert | `additionalParameters` array-of-object |
+| `ves_mobile_flow_event` | mobileFlow | nested `gtpPerFlowMetrics` object |
+| `ves_sip_signaling_event` | sipSignaling | nested `vendorNfNameFields` |
+| `ves_voice_quality_event` | voiceQuality | nested `vendorNfNameFields` + array |
+| `ves_perf_3gpp_event` | perf3gpp | 3GPP-specific nested counters |
 
 See `docs/adr/` for design rationale. See `CHANGELOG.md` for release history.
 

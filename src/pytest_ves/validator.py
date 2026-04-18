@@ -82,12 +82,57 @@ def _rs_validation_error_type() -> type[Exception]:
     return getattr(_jsonschema_rs, "ValidationError", Exception)
 
 
+def _preflight_envelope(event: Any) -> None:
+    """Early-reject trivially-invalid payloads that the upstream ONAP
+    schema lets through.
+
+    The vendored ``CommonEventFormat_30.2.1_ONAP.json`` declares
+    ``properties.event`` and ``properties.eventList`` but does NOT list
+    either as ``required`` and does not wrap them in ``oneOf``. As a
+    result, the bare schema validator accepts ``{}``,
+    ``{"foo": "bar"}``, and ``{"eventList": []}`` as valid VES payloads,
+    which is almost certainly not what a caller of ``validate_ves()``
+    means. This wrapper enforces the convention that at least one of
+    ``event`` / ``eventList`` is present and non-empty before delegating
+    to the schema validator.
+    """
+    if not isinstance(event, dict):
+        raise SchemaValidationError(
+            f"top-level payload must be a dict, got {type(event).__name__}"
+        )
+    if not event:
+        raise SchemaValidationError("top-level payload is empty")
+    has_event = "event" in event
+    has_list = "eventList" in event
+    if not (has_event or has_list):
+        raise SchemaValidationError(
+            "top-level payload must contain 'event' or 'eventList'; "
+            "upstream ONAP schema is too permissive here so this library "
+            "adds the check client-side"
+        )
+    if has_list:
+        ev_list = event["eventList"]
+        if not isinstance(ev_list, list):
+            raise SchemaValidationError(
+                "'eventList' must be a list of event objects"
+            )
+        if len(ev_list) == 0:
+            raise SchemaValidationError("'eventList' must not be empty")
+
+
 def validate_ves(event: dict[str, Any]) -> None:
     """Validate a VES event dict against the vendored ONAP schema.
 
-    Raises :class:`SchemaValidationError` on the first schema failure. The
-    underlying validator exception is chained via ``__cause__``.
+    Raises :class:`SchemaValidationError` on the first failure. The
+    underlying validator exception is chained via ``__cause__`` when
+    present.
+
+    Applies a small pre-flight envelope check (``_preflight_envelope``)
+    because the ONAP schema itself allows empty / unrelated payloads
+    through; see the docstring there for detail.
     """
+    _preflight_envelope(event)
+
     if _HAS_JSONSCHEMA_RS:
         validator = _get_jsonschema_rs_validator()
         try:

@@ -1,0 +1,40 @@
+# Normalise line endings. Commit-time: always LF. Checkout: native (Windows
+# sees CRLF, macOS/Linux sees LF). Prevents the "LF will be replaced by
+# CRLF" noise on Windows `git commit` and stops the scenario where a
+# Windows contributor accidentally lands CRLF shell scripts that bash
+# refuses to execute on Linux CI runners.
+
+* text=auto eol=lf
+
+# Text files -- explicit, always LF in repo regardless of platform.
+*.py     text eol=lf
+*.pyi    text eol=lf
+*.toml   text eol=lf
+*.cfg    text eol=lf
+*.ini    text eol=lf
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.rst    text eol=lf
+*.txt    text eol=lf
+*.sh     text eol=lf
+*.bash   text eol=lf
+Dockerfile text eol=lf
+Makefile   text eol=lf
+
+# Vendored third-party schema -- large JSON (3091 lines). Mark as
+# linguist-vendored so GitHub language stats don't over-weight it, and
+# suppress the diff view since we never edit it by hand (refresh via
+# scripts/vendor-schema.sh).
+src/pytest_ves/schemas/*.json linguist-vendored -diff
+
+# Binary assets (none yet, but reserve).
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.pdf    binary
+*.whl    binary
+*.tar.gz binary

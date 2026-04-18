@@ -87,4 +87,6 @@ changes.
 ## Code of Conduct
 
 This project follows the
-[Contributor Covenant](https://www.contributor-covenant.org/) 2.1. Be kind.
+[Contributor Covenant](https://www.contributor-covenant.org/) 2.1, adopted in
+full. See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for the enforcement
+contact and scope.

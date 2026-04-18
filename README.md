@@ -60,16 +60,24 @@ def test_severity_branches(ves_fault_event, severity):
 Single vendored schema (`CommonEventFormat_30.2.1_ONAP.json`) covers
 **7.0 / 7.0.1 / 7.1 / 7.1.1 / 7.2 / 7.2.1**. Builders emit 7.2.1 defaults.
 
-## Fixture catalogue (v0.1.0 MVP)
+## Fixture catalogue
 
-| Fixture | Domain | Status |
+| Fixture | Domain | Since |
 |---|---|---|
-| `ves_fault_event` | fault | shipped |
-| `ves_heartbeat_event` | heartbeat | shipped |
-| `ves_measurement_event` | measurement | shipped |
-| `ves_notification_event` | notification | v0.2.0 |
-| `ves_pnf_registration_event` | pnfRegistration | v0.2.0 |
-| `ves_stnd_defined_event` | stndDefined (envelope only) | v0.2.0 |
+| `ves_fault_event` | fault | 0.1.0 |
+| `ves_heartbeat_event` | heartbeat | 0.1.0 |
+| `ves_measurement_event` | measurement | 0.1.0 |
+| `ves_notification_event` | notification | 0.2.0 |
+| `ves_pnf_registration_event` | pnfRegistration | 0.2.0 |
+| `ves_stnd_defined_event` | stndDefined (envelope only -- see ADR-002) | 0.2.0 |
+| `ves_syslog_event` | syslog | 0.2.0 |
+| `ves_state_change_event` | stateChange | 0.2.0 |
+| `ves_other_event` | other | 0.2.0 |
+| `ves_threshold_crossing_alert_event` | thresholdCrossingAlert | v0.3.0 |
+| `ves_mobile_flow_event` | mobileFlow | v0.3.0 |
+| `ves_sip_signaling_event` | sipSignaling | v0.3.0 |
+| `ves_voice_quality_event` | voiceQuality | v0.3.0 |
+| `ves_perf_3gpp_event` | perf3gpp | v0.3.0 |
 
 See `docs/adr/` for design rationale. See `CHANGELOG.md` for release history.
 

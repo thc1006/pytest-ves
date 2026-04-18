@@ -7,9 +7,15 @@ Public API:
 
 Pytest fixtures (auto-registered via the pytest11 entry point):
 
-    ves_fault_event
-    ves_heartbeat_event
-    ves_measurement_event
+    ves_fault_event              (v0.1.0)
+    ves_heartbeat_event          (v0.1.0)
+    ves_measurement_event        (v0.1.0)
+    ves_notification_event       (v0.2.0)
+    ves_pnf_registration_event   (v0.2.0)
+    ves_stnd_defined_event       (v0.2.0 -- envelope only, see ADR-002)
+    ves_syslog_event             (v0.2.0)
+    ves_state_change_event       (v0.2.0)
+    ves_other_event              (v0.2.0)
 
 See README.md for usage examples; see docs/adr/ for design rationale.
 """
@@ -19,19 +25,31 @@ from pytest_ves.builders import (
     FaultEventBuilder,
     HeartbeatEventBuilder,
     MeasurementEventBuilder,
+    NotificationEventBuilder,
+    OtherEventBuilder,
+    PnfRegistrationEventBuilder,
+    StateChangeEventBuilder,
+    StndDefinedEventBuilder,
+    SyslogEventBuilder,
 )
 from pytest_ves.validator import (
     SchemaValidationError,
     validate_ves,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "FaultEventBuilder",
     "HeartbeatEventBuilder",
     "MeasurementEventBuilder",
+    "NotificationEventBuilder",
+    "OtherEventBuilder",
+    "PnfRegistrationEventBuilder",
     "SchemaValidationError",
+    "StateChangeEventBuilder",
+    "StndDefinedEventBuilder",
+    "SyslogEventBuilder",
     "__version__",
     "validate_ves",
 ]

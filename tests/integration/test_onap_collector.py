@@ -57,12 +57,18 @@ def ves_collector_url() -> Iterator[str]:
     image = os.environ.get("ONAP_VES_COLLECTOR_IMAGE", _DEFAULT_IMAGE)
     container = DockerContainer(image).with_exposed_ports(_COLLECTOR_PORT)
     with container:
-        # Wait for the Jetty / Spring boot banner. Tag 1.8.0 is known to log
-        # "Started ... in <n> seconds" once ready.
+        # Wait for a Spring Boot banner that strictly indicates the
+        # HTTP listener is accepting requests. The literal "Started" alone
+        # also matches partial "Started initialization" logs that
+        # occur before Jetty binds the port.
         try:
-            wait_for_logs(container, "Started", timeout=120)
+            wait_for_logs(
+                container,
+                r"Started VesApplication in .* seconds",
+                timeout=180,
+            )
         except TimeoutError:
-            pytest.skip("collector did not come up within 120s; image quirks?")
+            pytest.skip("collector did not come up within 180s; image quirks?")
         host = container.get_container_host_ip()
         port = container.get_exposed_port(_COLLECTOR_PORT)
         url = f"http://{host}:{port}"

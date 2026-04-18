@@ -50,9 +50,38 @@ def test_builder_produces_correct_domain(builder_cls, domain, fields_key):
     )
 
 
-def test_v02_ships_nine_domain_builders():
+def test_public_api_ships_expected_builders():
+    """Guards against accidental rename / removal of shipped builders.
+
+    Uses a name-set check rather than a count so that adding a builder
+    in a future release only requires appending one line here. Removing
+    a builder (breaking change) is a conscious act that should update
+    this set.
+    """
     from pytest_ves import __all__
-    # __all__ contains all Builder names ending in 'EventBuilder' plus the
-    # validator helpers and __version__. Count just the builders.
-    builders = [n for n in __all__ if n.endswith("EventBuilder")]
-    assert len(builders) == 9
+
+    builders = {n for n in __all__ if n.endswith("EventBuilder")}
+    assert builders == {
+        # v0.1.0
+        "FaultEventBuilder",
+        "HeartbeatEventBuilder",
+        "MeasurementEventBuilder",
+        # v0.2.0
+        "NotificationEventBuilder",
+        "OtherEventBuilder",
+        "PnfRegistrationEventBuilder",
+        "StateChangeEventBuilder",
+        "StndDefinedEventBuilder",
+        "SyslogEventBuilder",
+    }
+
+
+def test_common_header_typeddict_declares_stnd_defined_namespace():
+    """Regression guard: the TypedDict must declare every field that a
+    shipped Builder actually emits. StndDefinedEventBuilder injects
+    ``stndDefinedNamespace`` into commonEventHeader; earlier releases
+    forgot to declare it on the TypedDict.
+    """
+    from pytest_ves.types import CommonEventHeader
+    # TypedDict stores field names in __annotations__ (Py >=3.10).
+    assert "stndDefinedNamespace" in CommonEventHeader.__annotations__

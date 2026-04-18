@@ -6,6 +6,33 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- `.github/workflows/ci.yml`: added `workflow_call: {}` trigger so the
+  `gate` job in `publish.yml` (which calls `uses: ./.github/workflows/ci.yml`)
+  is a valid reusable-workflow reference. Prior state would have caused
+  the first release tag to fail publishing.
+- `src/pytest_ves/types.py`: `CommonEventHeader` now declares
+  `stndDefinedNamespace: str`. `StndDefinedEventBuilder` emits this field
+  into the header; earlier releases forgot to declare it on the TypedDict
+  (runtime was fine because the ONAP schema allows additional properties;
+  strict type checkers would have flagged correct uses).
+
+### Changed
+- `tests/test_domain_coverage.py::test_public_api_ships_expected_builders`:
+  replaced the fragile `assert len == 9` with an explicit expected-name
+  set. Adding a future builder now requires one append instead of
+  coincidental count matching. Added a companion regression guard
+  asserting `CommonEventHeader.__annotations__` contains
+  `stndDefinedNamespace`.
+- `tests/integration/test_onap_collector.py`: tightened the
+  `wait_for_logs` pattern from the literal `"Started"` (which matches
+  `"Started initialization"` partway through boot) to the anchored
+  regex `Started VesApplication in .* seconds`. Timeout bumped to 180s.
+- `tests/integration/test_http_roundtrip.py::_ValidatingHandler.log_message`:
+  renamed parameter `format` -> `fmt` to stop shadowing the built-in.
+- Added `tests/integration/README.md` documenting both integration
+  layers, prerequisites, and invocation commands.
+
 ## [0.2.0] — 2026-04-19
 
 ### Added

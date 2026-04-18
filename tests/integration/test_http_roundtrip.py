@@ -31,7 +31,10 @@ class _ValidatingHandler(http.server.BaseHTTPRequestHandler):
     """HTTP handler that runs pytest-ves' own validator on POST bodies."""
 
     # Silence default stderr request logging so pytest output stays clean.
-    def log_message(self, format: str, *args: Any) -> None:
+    # Note: base API names the first positional arg `format` (shadows the
+    # built-in); we rename to `fmt` locally. `type: ignore[override]` keeps
+    # mypy happy about the Liskov substitution.
+    def log_message(self, fmt: str, *args: Any) -> None:  # type: ignore[override]
         return
 
     def do_POST(self) -> None:

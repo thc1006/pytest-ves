@@ -65,6 +65,10 @@ class CommonEventHeader(TypedDict, total=False):
     reportingEntityId: str
     sourceId: str
     timeZoneOffset: str
+    # Present only on stndDefined-domain events; indicates which external
+    # standards-body schema governs stndDefinedFields.data (e.g.
+    # "3GPP-FaultSupervision"). Populated by StndDefinedEventBuilder.
+    stndDefinedNamespace: str
 
 
 class FaultFields(TypedDict, total=False):

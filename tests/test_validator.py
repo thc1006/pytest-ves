@@ -114,39 +114,57 @@ def test_exception_chained_with_cause():
 # -- caching contracts ----------------------------------------------------
 
 
-def test_schema_loaded_only_once(monkeypatch):
-    """_load_schema is lru_cache'd; multiple validate calls must not re-read."""
-    # Clear cache first so we can count a controlled number of loads.
+def test_schema_loaded_only_once_across_many_calls(monkeypatch):
+    """_load_schema must be invoked AT MOST ONCE per process, regardless
+    of how many times validate_ves() runs. Enforced by two layered
+    lru_cache() decorators (_load_schema + _get_jsonschema_validator).
+
+    Prior revision was tautological (monkeypatched the validator factory
+    to a lambda, bypassing the cache entirely). This version forces the
+    pure-Python backend (so the cache path we care about is the one
+    exercised) and replaces _load_schema with its own lru_cache wrapper
+    that counts invocations.
+    """
+    import functools
+
+    # Force the pure-Python branch even if the [fast] extra is installed,
+    # because the jsonschema-rs path has its own cache chain that this
+    # test isn't trying to cover.
+    monkeypatch.setattr(vmod, "_HAS_JSONSCHEMA_RS", False)
+
     vmod._load_schema.cache_clear()
     vmod._get_jsonschema_validator.cache_clear()
 
+    original_unwrapped = vmod._load_schema.__wrapped__
     call_counter = {"n": 0}
-    real = vmod._load_schema.__wrapped__
 
-    def counting_loader():
+    @functools.lru_cache(maxsize=1)
+    def counting_load() -> dict:
         call_counter["n"] += 1
-        return real()
+        return original_unwrapped()
 
-    monkeypatch.setattr(vmod, "_load_schema", counting_loader)
-    # Re-create validator factory that uses the counting loader.
-    monkeypatch.setattr(
-        vmod, "_get_jsonschema_validator",
-        lambda: __import__(
-            "jsonschema"
-        ).Draft4Validator(counting_loader()),
+    monkeypatch.setattr(vmod, "_load_schema", counting_load)
+    vmod._get_jsonschema_validator.cache_clear()
+
+    for _ in range(5):
+        validate_ves(_minimal_valid_event())
+
+    assert call_counter["n"] == 1, (
+        "lru_cache on _load_schema is broken: expected exactly 1 invocation "
+        f"across 5 validate_ves() calls, got {call_counter['n']}"
     )
 
-    for _ in range(3):
-        validate_ves(_minimal_valid_event())
-    # Each validate_ves call re-invokes _get_jsonschema_validator because we
-    # monkeypatched it as a plain lambda (bypassing the cache). We only care
-    # that the inner real loader delegates to the cached stdlib call.
-    assert call_counter["n"] >= 1
 
+def test_schema_file_loaded_once_across_calls(monkeypatch):
+    """Without monkeypatching, repeated calls hit the lru_cache.
 
-def test_schema_file_loaded_once_across_calls():
-    """Without monkeypatching, repeated calls hit the lru_cache."""
+    Pinned to the pure-Python backend for the same reason as the
+    preceding test: the rs-backed path has its own cache and we're
+    specifically covering the stdlib jsonschema path here.
+    """
+    monkeypatch.setattr(vmod, "_HAS_JSONSCHEMA_RS", False)
     vmod._load_schema.cache_clear()
+    vmod._get_jsonschema_validator.cache_clear()
     event = _minimal_valid_event()
     for _ in range(5):
         validate_ves(event)
@@ -158,10 +176,21 @@ def test_schema_file_loaded_once_across_calls():
 # -- backend selection ----------------------------------------------------
 
 
-def test_default_backend_is_pure_python():
-    """When jsonschema-rs is not installed (the dev env), _HAS_JSONSCHEMA_RS is False."""
-    # Dev environment deliberately excludes jsonschema-rs.
-    assert vmod._HAS_JSONSCHEMA_RS is False
+def test_backend_selection_matches_install_state():
+    """_HAS_JSONSCHEMA_RS must reflect the actual install state of the
+    optional `jsonschema-rs` package.
+
+    Prior version assumed the dev env never had jsonschema-rs; that's
+    false whenever CI or a contributor runs `uv sync --all-extras`,
+    which pulls the `[fast]` extra. Instead, assert the invariant:
+    if the module imports, the flag is True; if not, False.
+    """
+    try:
+        import jsonschema_rs  # noqa: F401
+        installed = True
+    except ImportError:
+        installed = False
+    assert vmod._HAS_JSONSCHEMA_RS is installed
 
 
 def test_rs_factory_probes_api_shape(monkeypatch):
@@ -232,6 +261,21 @@ def test_rs_factory_raises_when_no_public_api(monkeypatch):
 
     with pytest.raises(RuntimeError, match="validator factory"):
         validate_ves(_minimal_valid_event())
+
+
+def test_pure_python_backend_error_wrapping(monkeypatch):
+    """Force the pure-Python jsonschema branch and verify the error
+    wrapping still works. Necessary to keep coverage at 100% when the
+    [fast] extra is installed (otherwise the pure-Python except block
+    never executes in CI).
+    """
+    monkeypatch.setattr(vmod, "_HAS_JSONSCHEMA_RS", False)
+    vmod._get_jsonschema_validator.cache_clear()
+    # Passes preflight (has 'event') but fails schema (missing required
+    # commonEventHeader fields).
+    bad = {"event": {"commonEventHeader": {"domain": "banana"}}}
+    with pytest.raises(SchemaValidationError):
+        validate_ves(bad)
 
 
 def test_rs_validation_error_type_default_is_exception():

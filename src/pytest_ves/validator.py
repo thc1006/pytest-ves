@@ -21,7 +21,7 @@ from jsonschema import ValidationError as _JsonschemaValidationError
 SCHEMA_RESOURCE = "CommonEventFormat_30.2.1_ONAP.json"
 
 try:  # pragma: no cover - branch depends on install-time extras
-    import jsonschema_rs as _imported_rs  # type: ignore[import-not-found]
+    import jsonschema_rs as _imported_rs
     _jsonschema_rs: Any = _imported_rs
     _HAS_JSONSCHEMA_RS = True
 except ImportError:  # pragma: no cover

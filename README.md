@@ -32,10 +32,29 @@ No container, no HTTP round-trip, no schema drift. The output is a plain
 
 ## Install
 
+Once the first release lands on PyPI:
+
 ```bash
-pip install pytest-ves
-# or, with the Rust-backed fast validator:
-pip install "pytest-ves[fast]"
+pip install pytest-ves                   # core only
+pip install "pytest-ves[fast]"           # + jsonschema-rs (10-100x faster)
+pip install "pytest-ves[factories]"      # + polyfactory (random / fuzz data)
+```
+
+**Pre-PyPI interim** (this project has not yet published its first
+release): install directly from the git repo:
+
+```bash
+pip install "pytest-ves @ git+https://github.com/thc1006/pytest-ves.git@main"
+# optional extras are honoured the same way:
+pip install "pytest-ves[fast] @ git+https://github.com/thc1006/pytest-ves.git@main"
+```
+
+Or clone and install editable for local development:
+
+```bash
+git clone https://github.com/thc1006/pytest-ves.git
+cd pytest-ves
+uv sync --all-extras     # or: pip install -e ".[fast,factories]"
 ```
 
 ## Quickstart

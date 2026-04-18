@@ -70,3 +70,6 @@ confirmed decisions; the original draft is kept for historical reference.
 
 - ADR-002 — Not vendoring 3GPP SA5 MnS schemas
 - ADR-003 — Python version floor (3.10)
+- ADR-004 — Client-side envelope pre-flight in `validate_ves()` (added
+  in v0.2.1 after round-3 review discovered that the upstream ONAP
+  schema accepts `{}`, `{"foo": "bar"}`, and `{"eventList": []}`)

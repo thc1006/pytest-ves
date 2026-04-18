@@ -72,7 +72,7 @@ def _get_jsonschema_rs_validator() -> Any:
         return _jsonschema_rs.JSONSchema(schema)
     # Really old fallback -- module-level validate only
     raise RuntimeError(  # pragma: no cover
-        "Installed jsonschema-rs exposes no known validator factory; " "please upgrade to >=0.20."
+        "Installed jsonschema-rs exposes no known validator factory; please upgrade to >=0.20."
     )
 
 

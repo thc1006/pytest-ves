@@ -26,7 +26,11 @@ repos:
       - id: check-case-conflict
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+    # Keep in sync (within one minor) with the ruff version contributors get
+    # from `uv sync --all-extras` (see pyproject.toml dev-group). A pinned
+    # older rev was causing behavioural drift between pre-commit and local
+    # `uv run ruff check` (N802 on stdlib HTTP handler method names).
+    rev: v0.15.0
     hooks:
       - id: ruff
         args: [--fix]

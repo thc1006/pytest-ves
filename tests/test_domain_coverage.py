@@ -46,7 +46,7 @@ def test_builder_produces_correct_domain(builder_cls, domain, fields_key):
     validate_ves(event)
     assert event["event"]["commonEventHeader"]["domain"] == domain
     assert fields_key in event["event"], (
-        f"{builder_cls.__name__} did not place its fields under " f"event.{fields_key}"
+        f"{builder_cls.__name__} did not place its fields under event.{fields_key}"
     )
 
 

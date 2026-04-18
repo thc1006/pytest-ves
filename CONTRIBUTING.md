@@ -10,6 +10,12 @@ changes.
 # install uv if needed: https://docs.astral.sh/uv/
 uv sync --all-extras
 
+# One-time: wire pre-commit hooks so stale-formatting / version-drift /
+# large-file / trailing-whitespace regressions cannot land in main.
+# The hook set is defined in .pre-commit-config.yaml (12 hooks, including
+# a local version-drift guard between pyproject.toml and __init__.py).
+uv run pre-commit install
+
 # Fast inner loop (no coverage):
 uv run pytest
 uv run ruff check .
@@ -21,6 +27,9 @@ uv run mypy src
 uv run coverage run -m pytest
 uv run coverage report -m
 uv run coverage html   # open htmlcov/index.html
+
+# Run the full hook suite on the whole tree (what CI will do):
+uv run pre-commit run --all-files
 ```
 
 ## Running integration tests

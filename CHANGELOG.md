@@ -6,6 +6,31 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.2] — 2026-04-19
+
+Tooling-only maintenance release. **Zero functional changes to the
+public API, builders, validator, or fixtures.** Bumping the PyPI
+version so the tooling fixes below reach downstream CI caches instead
+of silently rotting on GitHub `main`.
+
+### Changed
+- `.pre-commit-config.yaml`: ruff hook rev now tracks the same version
+  contributors get from `uv sync --all-extras`, fixing behavioural
+  drift (stdlib HTTP handler method names triggered N802 under the
+  pinned old ruff but not under the dev-group one).
+- `RELEASING.md`: expanded with the step-by-step release checklist
+  currently used by this maintainer.
+- `README.md`: clarified cross-references to the sister repo
+  `o-ran-smo-ves-dashboards` and corrected two ADR link paths.
+- Coverage badge in README now points at the correct Codecov slug.
+
+### Added
+- `.gitattributes`: normalises line endings so Windows clones of this
+  repo don't produce CRLF diffs against the Linux canonical tree.
+- `CODE_OF_CONDUCT.md`: adopted Contributor Covenant 2.1 verbatim
+  (no behaviour change; documents the already-in-place norms for
+  external contributions).
+
 ## [0.2.1] — 2026-04-19
 
 Post-v0.2.0 hardening. No new public API, no behavior changes to

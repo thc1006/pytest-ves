@@ -1,0 +1,90 @@
+[project]
+name = "pytest-ves"
+version = "0.1.0"
+description = "pytest fixtures and builders for ONAP VES 7.x events (fault, heartbeat, measurement, and more)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+    { name = "thc1006", email = "hctsai1006@cs.nctu.edu.tw" },
+]
+keywords = ["pytest", "ves", "onap", "o-ran", "smo", "testing", "fixtures"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Telecommunications Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+    "Topic :: System :: Networking",
+    "Typing :: Typed",
+]
+dependencies = [
+    "polyfactory>=3.3,<4",
+    "jsonschema>=4.25,<5",
+]
+
+[project.optional-dependencies]
+# Rust-backed validator, 10-100x faster on the 3091-line ONAP schema.
+fast = ["jsonschema-rs>=0.46,<1"]
+
+[project.urls]
+Homepage = "https://github.com/thc1006/pytest-ves"
+Documentation = "https://github.com/thc1006/pytest-ves#readme"
+Issues = "https://github.com/thc1006/pytest-ves/issues"
+Changelog = "https://github.com/thc1006/pytest-ves/blob/main/CHANGELOG.md"
+
+[project.entry-points.pytest11]
+pytest_ves = "pytest_ves.plugin"
+
+[build-system]
+requires = ["uv_build>=0.8,<1"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0,<10",
+    "pytest-cov>=7.0",
+    "ruff>=0.8",
+    "mypy>=1.11",
+    "types-jsonschema",
+    # Integration-test extras (opt-in via -m integration):
+    "testcontainers>=4.8",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+markers = [
+    "integration: runs against real Docker containers (opt-in)",
+]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "C4", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src"]
+
+[tool.coverage.run]
+source = ["pytest_ves"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false

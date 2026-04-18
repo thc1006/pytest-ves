@@ -1,4 +1,5 @@
 """Tests for ves_pnf_registration_event and PnfRegistrationEventBuilder."""
+
 from __future__ import annotations
 
 import pytest
@@ -23,9 +24,7 @@ def test_pnf_registration_fields_version_defaults_to_2_1(ves_pnf_registration_ev
 
 @pytest.mark.parametrize("version", ["2.0", "2.1"])
 def test_both_version_enum_values_valid(version):
-    event = PnfRegistrationEventBuilder(
-        pnf_registration_fields_version=version
-    ).build()
+    event = PnfRegistrationEventBuilder(pnf_registration_fields_version=version).build()
     validate_ves(event)
 
 
@@ -56,16 +55,23 @@ def test_all_optional_fields_propagate():
 def test_default_omits_all_optional_fields(ves_pnf_registration_event):
     fields = ves_pnf_registration_event()["event"]["pnfRegistrationFields"]
     for key in (
-        "lastServiceDate", "macAddress", "manufactureDate", "modelNumber",
-        "oamV4IpAddress", "oamV6IpAddress", "serialNumber", "softwareVersion",
-        "unitFamily", "unitType", "vendorName", "additionalFields",
+        "lastServiceDate",
+        "macAddress",
+        "manufactureDate",
+        "modelNumber",
+        "oamV4IpAddress",
+        "oamV6IpAddress",
+        "serialNumber",
+        "softwareVersion",
+        "unitFamily",
+        "unitType",
+        "vendorName",
+        "additionalFields",
     ):
         assert key not in fields
 
 
 def test_invalid_version_rejected():
-    event = PnfRegistrationEventBuilder(
-        pnf_registration_fields_version="9.9"
-    ).build()
+    event = PnfRegistrationEventBuilder(pnf_registration_fields_version="9.9").build()
     with pytest.raises(SchemaValidationError):
         validate_ves(event)

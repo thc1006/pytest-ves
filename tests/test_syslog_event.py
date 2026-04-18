@@ -1,4 +1,5 @@
 """Tests for ves_syslog_event and SyslogEventBuilder."""
+
 from __future__ import annotations
 
 import pytest
@@ -24,8 +25,7 @@ def test_syslog_required_fields(ves_syslog_event):
 
 @pytest.mark.parametrize(
     "sev",
-    ["Alert", "Critical", "Debug", "Emergency", "Error",
-     "Info", "Notice", "Warning"],
+    ["Alert", "Critical", "Debug", "Emergency", "Error", "Info", "Notice", "Warning"],
 )
 def test_all_syslog_severities_validate(sev):
     event = SyslogEventBuilder(syslog_sev=sev).build()
@@ -62,7 +62,5 @@ def test_all_optional_fields_propagate():
 
 
 def test_msg_with_special_chars_validates():
-    event = SyslogEventBuilder(
-        syslog_msg='segfault in func() at "line 10"\n'
-    ).build()
+    event = SyslogEventBuilder(syslog_msg='segfault in func() at "line 10"\n').build()
     validate_ves(event)

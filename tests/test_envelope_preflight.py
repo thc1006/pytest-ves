@@ -5,6 +5,7 @@ The vendored schema has no top-level ``required`` or ``oneOf`` over
 accept ``{}``, ``{"unrelated": "thing"}``, and ``{"eventList": []}``.
 ``validator._preflight_envelope`` catches those client-side.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -55,8 +56,10 @@ def test_valid_event_still_passes(ves_fault_event):
 def test_valid_event_list_passes(ves_fault_event, ves_heartbeat_event):
     # A non-empty eventList must still reach the schema validator and pass
     # if individual events are valid.
-    batch = {"eventList": [
-        ves_fault_event()["event"],
-        ves_heartbeat_event()["event"],
-    ]}
+    batch = {
+        "eventList": [
+            ves_fault_event()["event"],
+            ves_heartbeat_event()["event"],
+        ]
+    }
     validate_ves(batch)

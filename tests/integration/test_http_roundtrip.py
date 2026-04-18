@@ -9,6 +9,7 @@ bugs that a direct Python-dict assertion would miss:
 - Content-type round-trip.
 - The receiver's schema validation succeeds on our output.
 """
+
 from __future__ import annotations
 
 import http.server
@@ -81,9 +82,7 @@ def roundtrip_server() -> Iterator[str]:
 
 def _post(url: str, payload: dict[str, Any]) -> tuple[int, str]:
     data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        url, data=data, headers={"Content-Type": "application/json"}
-    )
+    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=5) as resp:
             return resp.status, resp.read().decode("utf-8")

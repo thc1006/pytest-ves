@@ -1,5 +1,11 @@
 # pytest-ves
 
+[![CI](https://github.com/thc1006/pytest-ves/actions/workflows/ci.yml/badge.svg)](https://github.com/thc1006/pytest-ves/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](CHANGELOG.md)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](pyproject.toml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+[![pytest](https://img.shields.io/badge/pytest-8.x%20%7C%209.x-blue)](pyproject.toml)
+
 > pytest fixtures and builders for ONAP VES 7.x events.
 
 Generate ready-to-use VES (Virtual Event Streaming, ONAP DCAE) event payloads in

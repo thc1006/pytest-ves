@@ -10,6 +10,7 @@ inside a single test function:
 The factories accept any dataclass field of the corresponding Builder as a
 keyword argument; unknown kwargs raise ``TypeError`` by dataclass convention.
 """
+
 from __future__ import annotations
 
 from collections.abc import Callable

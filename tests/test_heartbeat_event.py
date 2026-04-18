@@ -1,4 +1,5 @@
 """Tests for the ves_heartbeat_event fixture."""
+
 from __future__ import annotations
 
 from pytest_ves import validate_ves
@@ -20,7 +21,4 @@ def test_heartbeat_interval_overrides(ves_heartbeat_event):
 def test_heartbeat_additional_fields(ves_heartbeat_event):
     event = ves_heartbeat_event(additional_fields={"subsystemName": "amf-1"})
     validate_ves(event)
-    assert (
-        event["event"]["heartbeatFields"]["additionalFields"]["subsystemName"]
-        == "amf-1"
-    )
+    assert event["event"]["heartbeatFields"]["additionalFields"]["subsystemName"] == "amf-1"

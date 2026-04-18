@@ -5,6 +5,7 @@ backend, error-wrapping, and chained-cause preservation. The jsonschema-rs
 code path is covered indirectly (via monkeypatched modules) so we don't
 require the optional extra to be installed during unit tests.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -57,9 +58,17 @@ def test_missing_commonEventHeader_rejected():  # noqa: N802  # VES identifier
 def test_missing_each_required_ceh_field():
     """Stripping each required commonEventHeader field must fail schema."""
     required = [
-        "domain", "eventId", "eventName", "lastEpochMicrosec", "priority",
-        "reportingEntityName", "sequence", "sourceName", "startEpochMicrosec",
-        "version", "vesEventListenerVersion",
+        "domain",
+        "eventId",
+        "eventName",
+        "lastEpochMicrosec",
+        "priority",
+        "reportingEntityName",
+        "sequence",
+        "sourceName",
+        "startEpochMicrosec",
+        "version",
+        "vesEventListenerVersion",
     ]
     for field in required:
         event = _minimal_valid_event()
@@ -187,6 +196,7 @@ def test_backend_selection_matches_install_state():
     """
     try:
         import jsonschema_rs  # noqa: F401
+
         installed = True
     except ImportError:
         installed = False

@@ -1,4 +1,5 @@
 """Tests for the ves_measurement_event fixture."""
+
 from __future__ import annotations
 
 from pytest_ves import validate_ves

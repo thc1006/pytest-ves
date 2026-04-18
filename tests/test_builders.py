@@ -4,6 +4,7 @@ Exercises every dataclass field for every builder, including default
 behaviour, override semantics, timestamp precedence, and optional-field
 omission/inclusion rules.
 """
+
 from __future__ import annotations
 
 import time
@@ -42,9 +43,17 @@ def test_header_includes_all_11_required_fields():
     event = FaultEventBuilder().build()
     header = event["event"]["commonEventHeader"]
     for field in (
-        "domain", "eventId", "eventName", "lastEpochMicrosec", "priority",
-        "reportingEntityName", "sequence", "sourceName", "startEpochMicrosec",
-        "version", "vesEventListenerVersion",
+        "domain",
+        "eventId",
+        "eventName",
+        "lastEpochMicrosec",
+        "priority",
+        "reportingEntityName",
+        "sequence",
+        "sourceName",
+        "startEpochMicrosec",
+        "version",
+        "vesEventListenerVersion",
     ):
         assert field in header, f"missing required header field {field!r}"
 
@@ -72,9 +81,7 @@ def test_start_epoch_override_propagates_to_last_by_default():
 
 
 def test_distinct_start_and_last_epoch_overrides():
-    event = FaultEventBuilder(
-        start_epoch_micros=100, last_epoch_micros=999
-    ).build()
+    event = FaultEventBuilder(start_epoch_micros=100, last_epoch_micros=999).build()
     header = event["event"]["commonEventHeader"]
     assert header["startEpochMicrosec"] == 100
     assert header["lastEpochMicrosec"] == 999
@@ -83,9 +90,7 @@ def test_distinct_start_and_last_epoch_overrides():
 def test_ves_version_override_to_7_1_1():
     event = FaultEventBuilder(ves_event_listener_version="7.1.1").build()
     validate_ves(event)
-    assert (
-        event["event"]["commonEventHeader"]["vesEventListenerVersion"] == "7.1.1"
-    )
+    assert event["event"]["commonEventHeader"]["vesEventListenerVersion"] == "7.1.1"
 
 
 # -- FaultEventBuilder --------------------------------------------------
@@ -124,8 +129,11 @@ def test_fault_additional_info_populated_and_validates():
 @pytest.mark.parametrize(
     "vf",
     [
-        "Active", "Idle", "Preparing to terminate",
-        "Ready to terminate", "Requesting termination",
+        "Active",
+        "Idle",
+        "Preparing to terminate",
+        "Ready to terminate",
+        "Requesting termination",
     ],
 )
 def test_all_vf_statuses_validate(vf):
@@ -148,9 +156,7 @@ def test_fault_event_has_domain_fault():
 
 def test_heartbeat_fields_version_is_3_0():
     event = HeartbeatEventBuilder().build()
-    assert (
-        event["event"]["heartbeatFields"]["heartbeatFieldsVersion"] == "3.0"
-    )
+    assert event["event"]["heartbeatFields"]["heartbeatFieldsVersion"] == "3.0"
 
 
 def test_heartbeat_additional_fields_omitted_when_empty():
@@ -159,12 +165,8 @@ def test_heartbeat_additional_fields_omitted_when_empty():
 
 
 def test_heartbeat_additional_fields_included_when_provided():
-    event = HeartbeatEventBuilder(
-        additional_fields={"sub": "amf", "region": "eu"}
-    ).build()
-    assert (
-        event["event"]["heartbeatFields"]["additionalFields"]["sub"] == "amf"
-    )
+    event = HeartbeatEventBuilder(additional_fields={"sub": "amf", "region": "eu"}).build()
+    assert event["event"]["heartbeatFields"]["additionalFields"]["sub"] == "amf"
 
 
 def test_heartbeat_interval_defaults_to_60():
@@ -182,9 +184,7 @@ def test_heartbeat_domain_is_heartbeat():
 
 def test_measurement_fields_version_is_4_0():
     event = MeasurementEventBuilder().build()
-    assert (
-        event["event"]["measurementFields"]["measurementFieldsVersion"] == "4.0"
-    )
+    assert event["event"]["measurementFields"]["measurementFieldsVersion"] == "4.0"
 
 
 def test_measurement_interval_accepts_float():
@@ -198,13 +198,8 @@ def test_measurement_additional_fields_default_omitted():
 
 
 def test_measurement_additional_fields_populated():
-    event = MeasurementEventBuilder(
-        additional_fields={"counter": "42"}
-    ).build()
-    assert (
-        event["event"]["measurementFields"]["additionalFields"]["counter"]
-        == "42"
-    )
+    event = MeasurementEventBuilder(additional_fields={"counter": "42"}).build()
+    assert event["event"]["measurementFields"]["additionalFields"]["counter"] == "42"
 
 
 def test_measurement_domain_is_measurement():
@@ -229,8 +224,7 @@ def test_multiple_builds_produce_distinct_event_ids():
     e2 = builder.build()
     # Each .build() mints a fresh UUID since event_id is None.
     assert (
-        e1["event"]["commonEventHeader"]["eventId"]
-        != e2["event"]["commonEventHeader"]["eventId"]
+        e1["event"]["commonEventHeader"]["eventId"] != e2["event"]["commonEventHeader"]["eventId"]
     )
 
 

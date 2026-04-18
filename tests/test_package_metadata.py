@@ -1,4 +1,5 @@
 """Package-level smoke tests: public API is importable and reachable."""
+
 from __future__ import annotations
 
 import importlib

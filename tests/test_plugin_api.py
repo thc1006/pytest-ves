@@ -1,4 +1,5 @@
 """Tests for plugin-level fixture registration and callable ergonomics."""
+
 from __future__ import annotations
 
 import pytest
@@ -57,7 +58,5 @@ def test_parametrize_with_factory(ves_fault_event):
 
 def test_builder_class_usable_without_fixture():
     # The class-level API stays importable and callable with no pytest.
-    event = FaultEventBuilder(
-        source_name="no-fixture", alarm_condition="2"
-    ).build()
+    event = FaultEventBuilder(source_name="no-fixture", alarm_condition="2").build()
     assert event["event"]["commonEventHeader"]["sourceName"] == "no-fixture"

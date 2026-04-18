@@ -1,5 +1,6 @@
 """Edge cases: unicode sourceName, empty/long strings, and permissive schema
 behaviour that we document with regression tests."""
+
 from __future__ import annotations
 
 from pytest_ves import FaultEventBuilder, validate_ves

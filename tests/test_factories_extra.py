@@ -9,6 +9,7 @@ This test auto-skips when polyfactory is not installed, so the default
 `uv sync` flow still passes. CI that runs `uv sync --all-extras` will
 exercise it.
 """
+
 from __future__ import annotations
 
 import pytest

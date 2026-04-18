@@ -15,6 +15,7 @@ modelling carefully.
 The vendored JSON schema is the source of truth for validation; these types
 are a convenience layer for IDE completion and static analysis.
 """
+
 from __future__ import annotations
 
 from typing import Literal, TypedDict
@@ -52,9 +53,7 @@ class CommonEventHeader(TypedDict, total=False):
     sourceName: str
     startEpochMicrosec: int
     version: Literal["4.0", "4.0.1", "4.1"]
-    vesEventListenerVersion: Literal[
-        "7.0", "7.0.1", "7.1", "7.1.1", "7.2", "7.2.1"
-    ]
+    vesEventListenerVersion: Literal["7.0", "7.0.1", "7.1", "7.1.1", "7.2", "7.2.1"]
 
     # Optional (common)
     eventType: str
@@ -81,7 +80,10 @@ class FaultFields(TypedDict, total=False):
     faultFieldsVersion: Literal["4.0"]
     specificProblem: str
     vfStatus: Literal[
-        "Active", "Idle", "Preparing to terminate", "Ready to terminate",
+        "Active",
+        "Idle",
+        "Preparing to terminate",
+        "Ready to terminate",
         "Requesting termination",
     ]
 
@@ -175,8 +177,14 @@ class SyslogFields(TypedDict, total=False):
     syslogSData: str
     syslogSdId: str
     syslogSev: Literal[
-        "Alert", "Critical", "Debug", "Emergency", "Error",
-        "Info", "Notice", "Warning",
+        "Alert",
+        "Critical",
+        "Debug",
+        "Emergency",
+        "Error",
+        "Info",
+        "Notice",
+        "Warning",
     ]
     syslogTs: str
     syslogVer: float

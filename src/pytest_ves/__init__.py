@@ -19,6 +19,7 @@ Pytest fixtures (auto-registered via the pytest11 entry point):
 
 See README.md for usage examples; see docs/adr/ for design rationale.
 """
+
 from __future__ import annotations
 
 from pytest_ves.builders import (

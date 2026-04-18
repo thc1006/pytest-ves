@@ -5,6 +5,7 @@ Verifies that every shipped fixture / builder produces a payload whose
 that the payload passes schema validation. Guards against regressions where
 a new domain's fixture mis-routes to the wrong ``event.<xxx>Fields`` key.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -45,8 +46,7 @@ def test_builder_produces_correct_domain(builder_cls, domain, fields_key):
     validate_ves(event)
     assert event["event"]["commonEventHeader"]["domain"] == domain
     assert fields_key in event["event"], (
-        f"{builder_cls.__name__} did not place its fields under "
-        f"event.{fields_key}"
+        f"{builder_cls.__name__} did not place its fields under " f"event.{fields_key}"
     )
 
 
@@ -83,5 +83,6 @@ def test_common_header_typeddict_declares_stnd_defined_namespace():
     forgot to declare it on the TypedDict.
     """
     from pytest_ves.types import CommonEventHeader
+
     # TypedDict stores field names in __annotations__ (Py >=3.10).
     assert "stndDefinedNamespace" in CommonEventHeader.__annotations__

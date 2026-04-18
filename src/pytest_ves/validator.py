@@ -8,6 +8,7 @@ validation on the 3091-line ONAP schema.
 Backend selection happens once at import time via ``_HAS_JSONSCHEMA_RS`` so
 validation hot-paths branch cheaply instead of doing ``isinstance`` checks.
 """
+
 from __future__ import annotations
 
 import importlib.resources
@@ -22,6 +23,7 @@ SCHEMA_RESOURCE = "CommonEventFormat_30.2.1_ONAP.json"
 
 try:  # pragma: no cover - branch depends on install-time extras
     import jsonschema_rs as _imported_rs
+
     _jsonschema_rs: Any = _imported_rs
     _HAS_JSONSCHEMA_RS = True
 except ImportError:  # pragma: no cover
@@ -70,8 +72,7 @@ def _get_jsonschema_rs_validator() -> Any:
         return _jsonschema_rs.JSONSchema(schema)
     # Really old fallback -- module-level validate only
     raise RuntimeError(  # pragma: no cover
-        "Installed jsonschema-rs exposes no known validator factory; "
-        "please upgrade to >=0.20."
+        "Installed jsonschema-rs exposes no known validator factory; " "please upgrade to >=0.20."
     )
 
 
@@ -97,9 +98,7 @@ def _preflight_envelope(event: Any) -> None:
     to the schema validator.
     """
     if not isinstance(event, dict):
-        raise SchemaValidationError(
-            f"top-level payload must be a dict, got {type(event).__name__}"
-        )
+        raise SchemaValidationError(f"top-level payload must be a dict, got {type(event).__name__}")
     if not event:
         raise SchemaValidationError("top-level payload is empty")
     has_event = "event" in event
@@ -113,9 +112,7 @@ def _preflight_envelope(event: Any) -> None:
     if has_list:
         ev_list = event["eventList"]
         if not isinstance(ev_list, list):
-            raise SchemaValidationError(
-                "'eventList' must be a list of event objects"
-            )
+            raise SchemaValidationError("'eventList' must be a list of event objects")
         if len(ev_list) == 0:
             raise SchemaValidationError("'eventList' must not be empty")
 

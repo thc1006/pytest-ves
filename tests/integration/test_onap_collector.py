@@ -23,6 +23,7 @@ Invocation:
 The image URL and tag are configurable via env vars; defaults below are
 pinned to a known-good tag at the time of writing.
 """
+
 from __future__ import annotations
 
 import json

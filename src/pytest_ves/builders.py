@@ -12,6 +12,7 @@ core builders depend only on the Python standard library — no pydantic,
 msgspec, or polyfactory at runtime. For random/fuzz data generation, install
 ``pytest-ves[factories]`` and use the optional polyfactory integration.
 """
+
 from __future__ import annotations
 
 import time
@@ -315,9 +316,7 @@ class SyslogEventBuilder(_CommonHeaderMixin):
             fields_["additionalFields"] = self.additional_fields
         return {
             "event": {
-                "commonEventHeader": self._header(
-                    domain="syslog", event_name=self.event_name
-                ),
+                "commonEventHeader": self._header(domain="syslog", event_name=self.event_name),
                 "syslogFields": fields_,
             }
         }
@@ -344,9 +343,7 @@ class StateChangeEventBuilder(_CommonHeaderMixin):
             fields_["additionalFields"] = self.additional_fields
         return {
             "event": {
-                "commonEventHeader": self._header(
-                    domain="stateChange", event_name=self.event_name
-                ),
+                "commonEventHeader": self._header(domain="stateChange", event_name=self.event_name),
                 "stateChangeFields": fields_,
             }
         }
@@ -367,9 +364,7 @@ class OtherEventBuilder(_CommonHeaderMixin):
             fields_["hashMap"] = self.hash_map
         return {
             "event": {
-                "commonEventHeader": self._header(
-                    domain="other", event_name=self.event_name
-                ),
+                "commonEventHeader": self._header(domain="other", event_name=self.event_name),
                 "otherFields": fields_,
             }
         }

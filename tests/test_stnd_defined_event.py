@@ -1,4 +1,5 @@
 """Tests for ves_stnd_defined_event (envelope only, per ADR-002)."""
+
 from __future__ import annotations
 
 import pytest
@@ -19,10 +20,7 @@ def test_default_stnd_defined_validates(ves_stnd_defined_event):
 def test_default_has_namespace_in_header(ves_stnd_defined_event):
     event = ves_stnd_defined_event()
     assert "stndDefinedNamespace" in event["event"]["commonEventHeader"]
-    assert (
-        event["event"]["commonEventHeader"]["stndDefinedNamespace"]
-        == "3GPP-FaultSupervision"
-    )
+    assert event["event"]["commonEventHeader"]["stndDefinedNamespace"] == "3GPP-FaultSupervision"
 
 
 def test_user_data_payload_preserved():
@@ -47,15 +45,12 @@ def test_schema_reference_included_when_set():
     ).build()
     validate_ves(event)
     assert (
-        event["event"]["stndDefinedFields"]["schemaReference"]
-        == "https://example.com/schema.json"
+        event["event"]["stndDefinedFields"]["schemaReference"] == "https://example.com/schema.json"
     )
 
 
 def test_namespace_override_propagates():
-    event = StndDefinedEventBuilder(
-        stnd_defined_namespace="3GPP-Provisioning"
-    ).build()
+    event = StndDefinedEventBuilder(stnd_defined_namespace="3GPP-Provisioning").build()
     validate_ves(event)
     header = event["event"]["commonEventHeader"]
     assert header["stndDefinedNamespace"] == "3GPP-Provisioning"

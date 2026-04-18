@@ -8,6 +8,7 @@ importlib.metadata only, but that changes the runtime behavior of
 `pytest_ves.__version__` for vendored / zipapp use cases, so it's
 deferred.
 """
+
 from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version

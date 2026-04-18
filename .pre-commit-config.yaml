@@ -1,0 +1,53 @@
+---
+# Install once:   uv run pre-commit install
+# Manual run:     uv run pre-commit run --all-files
+#
+# The hooks below are the minimum set that would have caught every
+# round-1..4 review finding that was catchable at commit time (trailing
+# whitespace in YAML, malformed JSON, invalid TOML, stale lint, stray
+# large files). mypy is not in here because it is slow enough to be
+# worth running only in CI.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-added-large-files
+        args: [--maxkb=200]
+      - id: check-case-conflict
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: version-drift-guard
+        name: version drift between __init__.py and pyproject.toml
+        language: system
+        entry: python
+        args:
+          - -c
+          - |
+            import re, sys, pathlib
+            root = pathlib.Path(__file__).parent if False else pathlib.Path.cwd()
+            pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
+            init_py  = (root / "src/pytest_ves/__init__.py").read_text(encoding="utf-8")
+            py_ver  = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, re.M).group(1)
+            mod_ver = re.search(r'__version__\s*=\s*"([^"]+)"', init_py).group(1)
+            if py_ver != mod_ver:
+                sys.exit(f"version drift: pyproject={py_ver!r} __init__={mod_ver!r}")
+        pass_filenames: false
+        files: '^(pyproject\.toml|src/pytest_ves/__init__\.py)$'

@@ -1,4 +1,5 @@
 """Tests for the ves_fault_event fixture and FaultEventBuilder."""
+
 from __future__ import annotations
 
 import pytest
@@ -29,9 +30,7 @@ def test_fault_event_overrides_propagate(ves_fault_event):
     assert fault["eventSeverity"] == "CRITICAL"
 
 
-@pytest.mark.parametrize(
-    "severity", ["CRITICAL", "MAJOR", "MINOR", "WARNING", "NORMAL"]
-)
+@pytest.mark.parametrize("severity", ["CRITICAL", "MAJOR", "MINOR", "WARNING", "NORMAL"])
 def test_all_severities_validate(ves_fault_event, severity):
     event = ves_fault_event(event_severity=severity)
     validate_ves(event)
@@ -44,20 +43,16 @@ def test_invalid_severity_rejected(ves_fault_event):
 
 
 def test_builder_class_directly():
-    event = (
-        FaultEventBuilder(
-            source_name="O-RU-11220",
-            alarm_condition="28",
-            event_severity="CRITICAL",
-            specific_problem="CUS Link Failure",
-        ).build()
-    )
+    event = FaultEventBuilder(
+        source_name="O-RU-11220",
+        alarm_condition="28",
+        event_severity="CRITICAL",
+        specific_problem="CUS Link Failure",
+    ).build()
     validate_ves(event)
 
 
 def test_unique_event_ids(ves_fault_event):
     a = ves_fault_event()
     b = ves_fault_event()
-    assert a["event"]["commonEventHeader"]["eventId"] != b[
-        "event"
-    ]["commonEventHeader"]["eventId"]
+    assert a["event"]["commonEventHeader"]["eventId"] != b["event"]["commonEventHeader"]["eventId"]

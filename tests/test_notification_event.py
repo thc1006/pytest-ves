@@ -1,4 +1,5 @@
 """Tests for the ves_notification_event fixture and NotificationEventBuilder."""
+
 from __future__ import annotations
 
 import pytest
@@ -14,9 +15,7 @@ def test_default_notification_validates(ves_notification_event):
     event = ves_notification_event()
     validate_ves(event)
     assert event["event"]["commonEventHeader"]["domain"] == "notification"
-    assert (
-        event["event"]["notificationFields"]["notificationFieldsVersion"] == "2.0"
-    )
+    assert event["event"]["notificationFields"]["notificationFieldsVersion"] == "2.0"
 
 
 def test_notification_required_fields_present(ves_notification_event):
@@ -28,7 +27,10 @@ def test_notification_required_fields_present(ves_notification_event):
 def test_notification_optional_omitted_by_default(ves_notification_event):
     fields = ves_notification_event()["event"]["notificationFields"]
     for key in (
-        "changeContact", "newState", "oldState", "stateInterface",
+        "changeContact",
+        "newState",
+        "oldState",
+        "stateInterface",
         "additionalFields",
     ):
         assert key not in fields

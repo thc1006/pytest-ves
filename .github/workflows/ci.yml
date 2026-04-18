@@ -40,6 +40,9 @@ jobs:
       - run: uv run coverage run -m pytest
       - run: uv run coverage report -m --fail-under=90
       - run: uv run coverage xml
+      # Integration tests (HTTP round-trip layer; ONAP collector gated
+      # behind RUN_ONAP_INTEGRATION and intentionally skipped here).
+      - run: uv run pytest -m integration tests/integration/test_http_roundtrip.py
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         if: matrix.python-version == '3.12'

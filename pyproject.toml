@@ -66,9 +66,11 @@ dev = [
 minversion = "8.0"
 testpaths = ["tests"]
 markers = [
-    "integration: runs against real Docker containers (opt-in)",
+    "integration: opt-in tests that exercise HTTP wire-format or real ONAP containers; skipped in the default unit-test run.",
 ]
-addopts = "-ra --strict-markers"
+# Default invocation is unit-tests-only; run `-m integration` to include HTTP
+# round-trip and ONAP VES Collector tests.
+addopts = "-ra --strict-markers -m 'not integration'"
 # Note on coverage: because pytest_ves IS a pytest plugin registered via
 # pytest11 entry points, pytest-cov activates AFTER pytest has already
 # imported our package. That produces "module-not-measured" warnings and

@@ -25,14 +25,24 @@ uv run coverage html   # open htmlcov/index.html
 
 ## Running integration tests
 
-Integration tests require Docker and are opt-in:
+Integration tests are opt-in and split into two layers:
 
 ```bash
-uv run pytest -m integration
+# HTTP wire-format round-trip (stdlib http.server; NO Docker required):
+uv run pytest -m integration tests/integration/test_http_roundtrip.py
+
+# Real ONAP VES Collector (requires Docker + ~1 GB image pull):
+docker pull onap/org.onap.dcaegen2.collectors.ves.vescollector:1.8.0
+RUN_ONAP_INTEGRATION=1 uv run pytest -m integration tests/integration/test_onap_collector.py
+
+# Both at once (includes optional gated tests):
+RUN_ONAP_INTEGRATION=1 uv run pytest -m integration
 ```
 
-They exercise the vendored schema against a live ONAP VES Collector container
-and the O-RAN SC `smo-ves` stack. See `tests/integration/README.md`.
+The default `uv run pytest` invocation excludes `-m integration` so the
+inner dev loop stays fast and Docker-free. CI runs the HTTP round-trip
+layer on every push; the ONAP collector layer is a manual / scheduled
+workflow because the image is large and slow to pull.
 
 ## Updating the vendored VES schema
 

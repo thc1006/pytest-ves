@@ -1,5 +1,7 @@
 # pytest-ves
 
+[![PyPI](https://img.shields.io/pypi/v/pytest-ves.svg)](https://pypi.org/project/pytest-ves/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/pytest-ves.svg)](https://pypi.org/project/pytest-ves/)
 [![CI](https://github.com/thc1006/pytest-ves/actions/workflows/ci.yml/badge.svg)](https://github.com/thc1006/pytest-ves/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](CHANGELOG.md)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](pyproject.toml)
@@ -12,7 +14,8 @@ Generate ready-to-use VES (Virtual Event Streaming, ONAP DCAE) event payloads in
 Python tests — with sensible defaults, strong typing, and optional JSON Schema
 validation against the official ONAP `CommonEventFormat_30.2.1_ONAP.json`.
 
-**Status:** v0.1.0 in development. APIs may shift until 1.0.
+**Status:** v0.2.2 on PyPI (2026-04-19). Pre-1.0; APIs may shift until 1.0.
+Install from <https://pypi.org/project/pytest-ves/>.
 
 ## Why
 
@@ -38,7 +41,7 @@ No container, no HTTP round-trip, no schema drift. The output is a plain
 
 ## Install
 
-Once the first release lands on PyPI:
+From PyPI (<https://pypi.org/project/pytest-ves/>):
 
 ```bash
 pip install pytest-ves                   # core only
@@ -46,16 +49,13 @@ pip install "pytest-ves[fast]"           # + jsonschema-rs (10-100x faster)
 pip install "pytest-ves[factories]"      # + polyfactory (random / fuzz data)
 ```
 
-**Pre-PyPI interim** (this project has not yet published its first
-release): install directly from the git repo:
+To follow `main` between releases:
 
 ```bash
 pip install "pytest-ves @ git+https://github.com/thc1006/pytest-ves.git@main"
-# optional extras are honoured the same way:
-pip install "pytest-ves[fast] @ git+https://github.com/thc1006/pytest-ves.git@main"
 ```
 
-Or clone and install editable for local development:
+For local development / contribution:
 
 ```bash
 git clone https://github.com/thc1006/pytest-ves.git
@@ -119,9 +119,13 @@ See `docs/adr/` for design rationale. See `CHANGELOG.md` for release history.
 
 ## Related projects
 
-- **`o-ran-smo-ves-dashboards`** (sister project, TBD) — Grafana dashboard
-  pack for VES events stored in InfluxDB via `nonrtric-plt-influxlogger`.
-  Uses `pytest-ves` as its test-data seeder.
+- [**`o-ran-smo-ves-dashboards`**](https://github.com/thc1006/o-ran-smo-ves-dashboards)
+  — sister project. Grafana dashboard pack for VES perf3gpp PM data
+  stored in InfluxDB via `nonrtric-plt-influxlogger`. Uses `pytest-ves`
+  as its seeder. Published to the grafana.com community catalogue
+  as dashboards [`25190`](https://grafana.com/grafana/dashboards/25190)
+  (NR cell DU) and [`25189`](https://grafana.com/grafana/dashboards/25189)
+  (NR cell CU).
 - [`o-ran-sc/smo-ves`](https://github.com/o-ran-sc/smo-ves) — upstream
   reference stack (VES Collector + Grafana + InfluxDB) used in our
   integration tests.

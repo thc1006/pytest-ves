@@ -41,8 +41,11 @@ factories = ["polyfactory>=3.3,<4"]
 [project.urls]
 Homepage = "https://github.com/thc1006/pytest-ves"
 Documentation = "https://github.com/thc1006/pytest-ves#readme"
+Repository = "https://github.com/thc1006/pytest-ves"
 Issues = "https://github.com/thc1006/pytest-ves/issues"
 Changelog = "https://github.com/thc1006/pytest-ves/blob/main/CHANGELOG.md"
+"Release notes" = "https://github.com/thc1006/pytest-ves/releases"
+"Sister project" = "https://github.com/thc1006/o-ran-smo-ves-dashboards"
 
 [project.entry-points.pytest11]
 pytest_ves = "pytest_ves.plugin"
